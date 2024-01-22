@@ -59,9 +59,13 @@ const useAxios = <T>({
     }
   };
 
-  const refetch = useCallback(() => setReload((prev) => prev + 1), []);
+  const refetch = useCallback(() => {
+    setLoading(true);
+    setReload((prev) => prev + 1);
+  }, []);
 
   useEffect(() => {
+    setLoading(true);
     if (method !== "POST") {
       const controller = new AbortController();
 
