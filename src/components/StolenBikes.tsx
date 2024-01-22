@@ -1,5 +1,7 @@
+import { SetStateAction, useState } from "react";
 import useAxios from "../hooks/useAxios";
 import Card from "./BikeCard";
+import PaginationBikes from "./PaginationBikes";
 
 interface BikesData {
   date_stolen: number;
@@ -31,14 +33,24 @@ interface ApiResponse {
   bikes: BikesData[];
 }
 const StolenBikes = () => {
-  const { data, error } = useAxios<ApiResponse>({
-    url: "search",
+  const [currentPage, setCurrentPage] = useState(1);
+  const { data, error, loading, refetch } = useAxios<ApiResponse>({
+    url: `search?page=${currentPage}&per_page=10&query=`,
     method: "GET",
     useBaseUrl: true,
   });
 
+  const handlePageChange = (page: SetStateAction<number>) => {
+    setCurrentPage(page);
+    setTimeout(() => {
+      refetch();
+    }, 1000);
+  };
+
   return (
     <>
+      {loading && <p>Loading...</p>}
+      {error && <p>{error}</p>}
       {data &&
         data.bikes.map((bike) => {
           return (
@@ -53,6 +65,12 @@ const StolenBikes = () => {
             />
           );
         })}
+      <PaginationBikes
+        countPerPage={10}
+        currentPage={currentPage}
+        location="munich"
+        onPageChange={(page) => handlePageChange(page)}
+      />
     </>
   );
 };
