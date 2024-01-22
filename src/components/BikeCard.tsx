@@ -12,6 +12,8 @@ import {
   Span,
 } from "./styles/BikeCard.styled";
 
+import noImage from "../assets/no-image.jpg";
+
 interface Props {
   imageURL: string;
   title: string;
@@ -32,10 +34,7 @@ const Card: React.FC<Props> = ({
   return (
     <CardContainer>
       <ImageContainer>
-        <Image
-          src={imageURL ? imageURL : "src/assets/no-image.jpg"}
-          alt="Case Image"
-        />
+        <Image src={imageURL ? imageURL : noImage} alt="Case Image" />
       </ImageContainer>
       <ContentContainer>
         <CaseTitle>{title}</CaseTitle>
