@@ -80,7 +80,7 @@ const useAxios = <T>({
           const response = await axios.request(config);
           setData(response.data);
         } catch (error) {
-          if (axios.isAxiosError(error)) {
+          if (axios.isAxiosError(error) && error.message !== "canceled") {
             const axiosError = error as AxiosError;
             setError(axiosError.message);
           }
