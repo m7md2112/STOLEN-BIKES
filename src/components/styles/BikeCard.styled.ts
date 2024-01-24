@@ -2,10 +2,10 @@ import styled from "styled-components";
 
 const CardContainer = styled.li`
   display: flex;
-  flex-wrap: wrap;
   flex-direction: row;
-  align-items: center;
-  height: 200px;
+  align-items: flex-start;
+  max-height: 200px;
+  overflow: overlay;
   width: 90%;
   margin: 12px 0 0;
   padding-top: 0;
@@ -13,15 +13,15 @@ const CardContainer = styled.li`
   border: 1px solid #ccc;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   @media (max-width: 600px) {
-    flex-wrap: nowrap;
     flex-direction: column;
-    height: auto;
+    max-height: fit-content;
+    overflow: overlay;
   }
 `;
 
 const ImageContainer = styled.p`
-  flex: 0 0 30%;
-  margin: 0 auto;
+  flex: auto;
+  margin: auto;
   justify-content: center;
   display: inherit;
   height: 200px;
@@ -31,19 +31,20 @@ const ImageContainer = styled.p`
 `;
 
 const Image = styled.img`
-  // max-width: 100%;
-  // max-height: 180px;
-  // object-fit: contain;
-
+  object-fit: cover;
   display: block;
   margin: auto;
-  max-height: 180px;
-  min-width: 70px;
+  min-width: 80%;
 `;
 
 const ContentContainer = styled.div`
   flex: 1;
   padding: 20px;
+  height: -webkit-fill-available;
+  contain: content;
+  text-overflow: ellipsis;
+  overflow: auto;
+  white-space: pre-wrap;
 `;
 
 const CaseTitle = styled.h2`
@@ -70,11 +71,17 @@ const Span = styled.span`
   font-weight: bold;
 `;
 
-const DateOfTheft = styled.span``;
+const DateOfTheft = styled.span`
+  padding: 10px;
+`;
 
-const DateReported = styled.span``;
+const DateReported = styled.span`
+  padding: 10px;
+`;
 
-const Location = styled.span``;
+const Location = styled.span`
+  padding: 10px;
+`;
 
 export {
   CardContainer,
