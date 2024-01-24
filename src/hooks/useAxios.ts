@@ -60,6 +60,7 @@ const useAxios = <T>({
   };
 
   const refetch = useCallback(() => {
+    setError(null);
     setLoading(true);
     setReload((prev) => prev + 1);
   }, []);
