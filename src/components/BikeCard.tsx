@@ -18,12 +18,12 @@ interface Props {
   imageURL: string;
   title: string;
   description: string;
-  dateOfTheft: number;
+  dateOfTheft: string;
   dateReported: number;
   location: string;
 }
 
-const Card: React.FC<Props> = ({
+const BikeCard: React.FC<Props> = ({
   imageURL,
   title,
   description,
@@ -34,18 +34,21 @@ const Card: React.FC<Props> = ({
   return (
     <CardContainer>
       <ImageContainer>
-        <Image src={imageURL ? imageURL : noImage} alt="Case Image" />
+        <Image
+          src={imageURL ? imageURL : noImage}
+          alt="Case Image"
+          width="150px"
+          height="150px"
+        />
       </ImageContainer>
       <ContentContainer>
         <CaseTitle>{title}</CaseTitle>
         <CaseDescription>{description}</CaseDescription>
         <DateLocationContainer>
           <DateOfTheft>
-            <Span>Date of Theft: </Span>{" "}
-            {new Date(dateOfTheft * 1000).toLocaleString()}
+            <Span>Date of Theft: </Span> {dateOfTheft}
           </DateOfTheft>
           <DateReported>
-            {" "}
             <Span>Date Reported: </Span> {dateReported}
           </DateReported>
           <Location>
@@ -57,4 +60,4 @@ const Card: React.FC<Props> = ({
   );
 };
 
-export default Card;
+export default BikeCard;
