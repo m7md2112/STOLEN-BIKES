@@ -2,6 +2,22 @@ import styled from "styled-components";
 
 const PaginationContainer = styled.div`
   padding: 10px;
+  position: fixed;
+  display: flex;
+  bottom: 0;
+  width: 100%;
+  flex-wrap: nowrap;
+  flex-direction: column;
+  align-items: center;
+  background-color: rgb(22 20 20 / 90%);
+  box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
+  @media (prefers-color-scheme: light) {
+    color: aqua;
+  }
+  @media (min-width: 600px) {
+    flex-direction: row;
+    justify-content: center;
+  }
 `;
 
 const PageInfo = styled.div`
