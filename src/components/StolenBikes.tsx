@@ -1,7 +1,10 @@
-import { SetStateAction, useState } from "react";
+import { SetStateAction, useRef, useState } from "react";
 import useAxios from "../hooks/useAxios";
-import Card from "./BikeCard";
-import PaginationBikes from "./PaginationBikes";
+import Alert from "./Alert";
+import BikeCard from "./BikeCard";
+import PaginationBikes, { FetchRef } from "./PaginationBikes";
+import SearchForm, { SearchCriteria } from "./SearchForm";
+import { AppContainer } from "./styles/AppContainer.styled";
 
 interface BikesData {
   date_stolen: number;
@@ -34,11 +37,19 @@ interface ApiResponse {
 }
 const StolenBikes = () => {
   const [currentPage, setCurrentPage] = useState(1);
+  const [searchCriteria, setSearchCriteria] = useState<SearchCriteria>();
+
   const { data, error, loading, refetch } = useAxios<ApiResponse>({
-    url: `search?page=${currentPage}&per_page=10&query=`,
+    url: `search?page=${currentPage}&per_page=${
+      searchCriteria?.resultsPerPage || 10
+    }&query=${searchCriteria?.query || ""}&location=${
+      searchCriteria?.location || "Munich"
+    }&distance=${searchCriteria?.distance}&stolenness=proximity`,
     method: "GET",
     useBaseUrl: true,
   });
+
+  const childRef = useRef<FetchRef>(null);
 
   const handlePageChange = (page: SetStateAction<number>) => {
     setCurrentPage(page);
@@ -47,31 +58,44 @@ const StolenBikes = () => {
     }, 1000);
   };
 
+  const handleSearchCriteria = (data: SearchCriteria) => {
+    setSearchCriteria(data);
+    refetch();
+    childRef.current?.refetch();
+  };
+
   return (
-    <>
-      {loading && <p>Loading...</p>}
-      {error && <p>{error}</p>}
+    <AppContainer>
+      <SearchForm handleSearch={handleSearchCriteria} />
       {data &&
         data.bikes.map((bike) => {
           return (
-            <Card
+            <BikeCard
               key={bike.id}
               imageURL={bike.large_img}
               title={bike.title}
               description={bike.description}
-              dateOfTheft={bike.date_stolen}
+              dateOfTheft={new Date(bike.date_stolen * 1000).toLocaleString()}
               dateReported={bike.year}
               location={bike.stolen_location}
             />
           );
         })}
+      {loading && <Alert type="loading" message="Loading" />}
+      {error && (
+        <Alert type="error" message={`Something went wrong!: ${error}`} />
+      )}
+
       <PaginationBikes
-        countPerPage={10}
+        ref={childRef}
+        countPerPage={searchCriteria?.resultsPerPage || 10}
         currentPage={currentPage}
-        location="munich"
+        location={searchCriteria?.location || "Munich"}
+        distance={searchCriteria?.distance || 0}
+        searchQuery={searchCriteria?.query || ""}
         onPageChange={(page) => handlePageChange(page)}
       />
-    </>
+    </AppContainer>
   );
 };
 export default StolenBikes;
