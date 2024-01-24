@@ -44,7 +44,7 @@ const StolenBikes = () => {
       searchCriteria?.resultsPerPage || 10
     }&query=${searchCriteria?.query || ""}&location=${
       searchCriteria?.location || "Munich"
-    }&distance=${searchCriteria?.distance}&stolenness=proximity`,
+    }&distance=${searchCriteria?.distance || 1}&stolenness=proximity`,
     method: "GET",
     useBaseUrl: true,
   });
@@ -60,8 +60,22 @@ const StolenBikes = () => {
 
   const handleSearchCriteria = (data: SearchCriteria) => {
     setSearchCriteria(data);
+    console.log(searchCriteria);
+    filteredSearchBasedOnDateRange();
     refetch();
     childRef.current?.refetch();
+  };
+
+  const filteredSearchBasedOnDateRange = () => {
+    const dateFrom = new Date(searchCriteria?.startDate || 0).getTime() / 1000;
+    const dateTo = new Date(searchCriteria?.endDate || 0).getTime() / 1000;
+    const filteredData = data?.bikes.filter((item) => {
+      const dateStolen = item.date_stolen;
+      return dateStolen >= dateFrom && dateStolen <= dateTo;
+    });
+    if (filteredData?.length) {
+      return filteredData;
+    }
   };
 
   return (
@@ -69,7 +83,7 @@ const StolenBikes = () => {
       <SearchForm handleSearch={handleSearchCriteria} />
       <CardsContainer>
         {data &&
-          data.bikes.map((bike) => {
+          (filteredSearchBasedOnDateRange() || data.bikes).map((bike) => {
             return (
               <BikeCard
                 key={bike.id}
@@ -94,7 +108,7 @@ const StolenBikes = () => {
         countPerPage={searchCriteria?.resultsPerPage || 10}
         currentPage={currentPage}
         location={searchCriteria?.location || "Munich"}
-        distance={searchCriteria?.distance || 0}
+        distance={searchCriteria?.distance || 1}
         searchQuery={searchCriteria?.query || ""}
         onPageChange={(page) => handlePageChange(page)}
       />

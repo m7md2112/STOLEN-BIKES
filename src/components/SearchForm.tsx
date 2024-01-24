@@ -23,7 +23,7 @@ interface Props {
 
 const SearchForm: React.FC<Props> = ({ handleSearch }) => {
   const [location, setLocation] = useState("Munich");
-  const [distance, setDistance] = useState(0);
+  const [distance, setDistance] = useState(1);
   const [query, setQuery] = useState("");
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
