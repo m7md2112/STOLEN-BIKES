@@ -1,14 +1,12 @@
 import styled from "styled-components";
 
 const PaginationContainer = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
   padding: 10px;
 `;
 
 const PageInfo = styled.div`
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
 `;
 
