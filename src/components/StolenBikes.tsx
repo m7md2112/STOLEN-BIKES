@@ -4,7 +4,7 @@ import Alert from "./Alert";
 import BikeCard from "./BikeCard";
 import PaginationBikes, { FetchRef } from "./PaginationBikes";
 import SearchForm, { SearchCriteria } from "./SearchForm";
-import { AppContainer } from "./styles/AppContainer.styled";
+import { AppContainer, CardsContainer } from "./styles/AppContainer.styled";
 
 interface BikesData {
   date_stolen: number;
@@ -67,20 +67,23 @@ const StolenBikes = () => {
   return (
     <AppContainer>
       <SearchForm handleSearch={handleSearchCriteria} />
-      {data &&
-        data.bikes.map((bike) => {
-          return (
-            <BikeCard
-              key={bike.id}
-              imageURL={bike.large_img}
-              title={bike.title}
-              description={bike.description}
-              dateOfTheft={new Date(bike.date_stolen * 1000).toLocaleString()}
-              dateReported={bike.year}
-              location={bike.stolen_location}
-            />
-          );
-        })}
+      <CardsContainer>
+        {data &&
+          data.bikes.map((bike) => {
+            return (
+              <BikeCard
+                key={bike.id}
+                imageURL={bike.large_img}
+                title={bike.title}
+                description={bike.description}
+                dateOfTheft={new Date(bike.date_stolen * 1000).toLocaleString()}
+                dateReported={bike.year}
+                location={bike.stolen_location}
+              />
+            );
+          })}
+      </CardsContainer>
+
       {loading && <Alert type="loading" message="Loading" />}
       {error && (
         <Alert type="error" message={`Something went wrong!: ${error}`} />
