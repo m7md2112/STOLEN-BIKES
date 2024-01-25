@@ -68,9 +68,9 @@ const StolenBikes = () => {
   };
 
   useEffect(() => {
-    const dateFrom = new Date(searchCriteria?.startDate || 0).getTime() / 1000;
-    const dateTo = new Date(searchCriteria?.endDate || 0).getTime() / 1000;
     if (searchCriteria?.startDate && searchCriteria?.endDate) {
+      const dateFrom = new Date(searchCriteria.startDate).getTime() / 1000;
+      const dateTo = new Date(searchCriteria.endDate).getTime() / 1000;
       const filteredData = data?.bikes.filter((item) => {
         const dateStolen = item.date_stolen;
         return dateStolen >= dateFrom && dateStolen <= dateTo;
