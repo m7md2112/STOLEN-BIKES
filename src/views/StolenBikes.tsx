@@ -61,6 +61,7 @@ const StolenBikes = () => {
   };
 
   const handleSearchCriteria = (data: SearchCriteria) => {
+    setCurrentPage(1);
     setSearchCriteria(data);
     refetch();
     childRef.current?.refetch();
