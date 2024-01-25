@@ -1,4 +1,4 @@
-import { SetStateAction, useRef, useState } from "react";
+import { SetStateAction, useEffect, useRef, useState } from "react";
 import Alert from "../components/Alert";
 import BikeCard from "../components/BikeCard";
 import PaginationBikes, { FetchRef } from "../components/PaginationBikes";
@@ -38,6 +38,8 @@ interface ApiResponse {
 const StolenBikes = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [searchCriteria, setSearchCriteria] = useState<SearchCriteria>();
+  const [filteredBasedOnDateRange, setFilteredBasedOnDateRange] =
+    useState<BikesData[]>();
 
   const { data, error, loading, refetch } = useAxios<ApiResponse>({
     url: `search?page=${currentPage}&per_page=${
@@ -60,30 +62,30 @@ const StolenBikes = () => {
 
   const handleSearchCriteria = (data: SearchCriteria) => {
     setSearchCriteria(data);
-    console.log(searchCriteria);
-    filteredSearchBasedOnDateRange();
     refetch();
     childRef.current?.refetch();
   };
 
-  const filteredSearchBasedOnDateRange = () => {
+  useEffect(() => {
     const dateFrom = new Date(searchCriteria?.startDate || 0).getTime() / 1000;
     const dateTo = new Date(searchCriteria?.endDate || 0).getTime() / 1000;
-    const filteredData = data?.bikes.filter((item) => {
-      const dateStolen = item.date_stolen;
-      return dateStolen >= dateFrom && dateStolen <= dateTo;
-    });
-    if (filteredData?.length) {
-      return filteredData;
+    if (searchCriteria?.startDate && searchCriteria?.endDate) {
+      const filteredData = data?.bikes.filter((item) => {
+        const dateStolen = item.date_stolen;
+        return dateStolen >= dateFrom && dateStolen <= dateTo;
+      });
+      setFilteredBasedOnDateRange(filteredData);
+    } else {
+      setFilteredBasedOnDateRange(data?.bikes);
     }
-  };
+  }, [searchCriteria, data]);
 
   return (
     <AppContainer>
       <SearchForm handleSearch={handleSearchCriteria} />
       <CardsContainer>
-        {data &&
-          (filteredSearchBasedOnDateRange() || data.bikes).map((bike) => {
+        {filteredBasedOnDateRange &&
+          filteredBasedOnDateRange.map((bike) => {
             return (
               <BikeCard
                 key={bike.id}
