@@ -1,10 +1,10 @@
 import { SetStateAction, useRef, useState } from "react";
+import Alert from "../components/Alert";
+import BikeCard from "../components/BikeCard";
+import PaginationBikes, { FetchRef } from "../components/PaginationBikes";
+import SearchForm, { SearchCriteria } from "../components/SearchForm";
 import useAxios from "../hooks/useAxios";
-import Alert from "./Alert";
-import BikeCard from "./BikeCard";
-import PaginationBikes, { FetchRef } from "./PaginationBikes";
-import SearchForm, { SearchCriteria } from "./SearchForm";
-import { AppContainer, CardsContainer } from "./styles/AppContainer.styled";
+import { AppContainer, CardsContainer } from "./styles/StolenBikes.styled";
 
 interface BikesData {
   date_stolen: number;
