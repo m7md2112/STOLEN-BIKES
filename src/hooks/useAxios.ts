@@ -1,4 +1,4 @@
-import axios, { AxiosError, AxiosRequestConfig } from "axios";
+import axios, { AxiosError } from "axios";
 import { useCallback, useEffect, useState } from "react";
 
 interface UseAxiosOptions {
@@ -26,7 +26,7 @@ const useAxios = <T>({
   customHeader,
   useBaseUrl,
 }: UseAxiosOptions): UseAxiosResponse<T> => {
-  const [data, setData] = useState(null);
+  const [data, setData] = useState<T | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [reload, setReload] = useState<number>(0);
@@ -38,22 +38,20 @@ const useAxios = <T>({
     try {
       setLoading(true);
 
-      const config: AxiosRequestConfig = {
-        baseURL: useBaseUrl === true ? baseUrl : undefined,
+      const response = await axios.request({
+        baseURL: useBaseUrl ? baseUrl : undefined,
         url,
         method,
         headers: customHeader,
         params: param,
         data: requestData,
         signal: controller.signal,
-      };
+      });
 
-      const response = await axios.request(config);
       setData(response.data);
       return response.data;
     } catch (error) {
-      const axiosError = error as AxiosError;
-      setError(axiosError.message);
+      setError((error as AxiosError).message);
     } finally {
       setLoading(false);
     }
@@ -66,28 +64,28 @@ const useAxios = <T>({
   }, []);
 
   useEffect(() => {
-    setLoading(true);
     if (method !== "POST") {
+      setLoading(true);
       const controller = new AbortController();
-
       const fetchData = async () => {
         try {
-          const config: AxiosRequestConfig = {
-            baseURL: useBaseUrl === true ? baseUrl : undefined,
+          const response = await axios.request({
+            baseURL: useBaseUrl ? baseUrl : undefined,
             url,
             method,
             headers: customHeader,
             params,
             data: payload,
             signal: controller.signal,
-          };
+          });
 
-          const response = await axios.request(config);
           setData(response.data);
         } catch (error) {
-          if (axios.isAxiosError(error) && error.message !== "canceled") {
-            const axiosError = error as AxiosError;
-            setError(axiosError.message);
+          if (
+            axios.isAxiosError(error) &&
+            (error as AxiosError).message !== "canceled"
+          ) {
+            setError((error as AxiosError).message);
           }
         } finally {
           setLoading(false);
@@ -96,20 +94,11 @@ const useAxios = <T>({
 
       fetchData();
 
-      return () => {
-        controller.abort();
-      };
+      return () => controller.abort();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [reload]);
 
-  return {
-    data,
-    error,
-    loading,
-    refetch,
-    sendRequest,
-  };
+  return { data, error, loading, refetch, sendRequest };
 };
 
 export default useAxios;
