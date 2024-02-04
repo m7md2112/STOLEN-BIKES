@@ -1,3 +1,4 @@
+import { createPortal } from "react-dom";
 import { ErrorMessage, LoadingMessage } from "./styles/Alert.styled";
 
 interface Props {
@@ -15,8 +16,7 @@ const Alert: React.FC<Props> = ({ message, type }) => {
         return null;
     }
   };
-
-  return renderAlert();
+  return createPortal(renderAlert(), document.body);
 };
 
 export default Alert;
