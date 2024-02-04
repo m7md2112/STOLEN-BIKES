@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useRef } from "react";
 import {
+  DateGroup,
   DateInput,
   FormLabel,
   NumberInput,
@@ -22,67 +23,49 @@ interface Props {
 }
 
 const SearchForm: React.FC<Props> = ({ handleSearch }) => {
-  const [location, setLocation] = useState("Munich");
-  const [distance, setDistance] = useState(1);
-  const [query, setQuery] = useState("");
-  const [startDate, setStartDate] = useState("");
-  const [endDate, setEndDate] = useState("");
-  const [resultsPerPage, setResultsPerPage] = useState(10);
+  const locationRef = useRef<HTMLInputElement>(null);
+  const distanceRef = useRef<HTMLInputElement>(null);
+  const queryRef = useRef<HTMLInputElement>(null);
+  const startDateRef = useRef<HTMLInputElement>(null);
+  const endDateRef = useRef<HTMLInputElement>(null);
+  const resultsPerPageRef = useRef<HTMLInputElement>(null);
 
-  const searchCriteria: SearchCriteria = {
-    location,
-    distance,
-    query,
-    startDate,
-    endDate,
-    resultsPerPage,
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+
+    const formData: SearchCriteria = {
+      location: locationRef.current?.value || "Munich",
+      distance: Number(distanceRef.current?.value) || 1,
+      query: queryRef.current?.value || "",
+      startDate: startDateRef.current?.value || "",
+      endDate: endDateRef.current?.value || "",
+      resultsPerPage: Number(resultsPerPageRef.current?.value) || 10,
+    };
+
+    handleSearch(formData);
   };
 
   return (
-    <SearchFormContainer>
+    <SearchFormContainer onSubmit={handleSubmit}>
       <FormLabel>Location:</FormLabel>
-      <TextInput
-        type="text"
-        value={location}
-        onChange={(e) => setLocation(e.target.value)}
-      />
+      <TextInput type="text" ref={locationRef} defaultValue="Munich" />
 
       <FormLabel>Distance:</FormLabel>
-      <TextInput
-        type="number"
-        value={distance}
-        onChange={(e) => setDistance(Number(e.target.value))}
-      />
+      <NumberInput type="number" ref={distanceRef} defaultValue={1} />
 
       <FormLabel>Query (Partial Case Title):</FormLabel>
-      <TextInput
-        type="text"
-        value={query}
-        onChange={(e) => setQuery(e.target.value)}
-      />
+      <TextInput type="text" ref={queryRef} defaultValue="" />
 
       <FormLabel>Date Range:</FormLabel>
-      <DateInput
-        type="date"
-        value={startDate}
-        onChange={(e) => setStartDate(e.target.value)}
-      />
-      <DateInput
-        type="date"
-        value={endDate}
-        onChange={(e) => setEndDate(e.target.value)}
-      />
+      <DateGroup>
+        <DateInput type="date" ref={startDateRef} defaultValue="" />
+        <DateInput type="date" ref={endDateRef} defaultValue="" />
+      </DateGroup>
 
       <FormLabel>Results Per Page:</FormLabel>
-      <NumberInput
-        type="number"
-        value={resultsPerPage}
-        onChange={(e) => setResultsPerPage(Number(e.target.value))}
-      />
+      <NumberInput type="number" ref={resultsPerPageRef} defaultValue={10} />
 
-      <SearchButton onClick={() => handleSearch(searchCriteria)}>
-        Search
-      </SearchButton>
+      <SearchButton type="submit">Search</SearchButton>
     </SearchFormContainer>
   );
 };
