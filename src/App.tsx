@@ -1,4 +1,4 @@
-import StolenBikes from "./views/StolenBikes";
+import StolenBikes from "views/StolenBikes";
 
 function App() {
   return (

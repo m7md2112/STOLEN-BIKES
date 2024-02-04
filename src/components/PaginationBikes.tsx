@@ -1,5 +1,5 @@
+import useAxios from "hooks/useAxios";
 import { forwardRef, useImperativeHandle } from "react";
-import useAxios from "../hooks/useAxios";
 import {
   PageButton,
   PageInfo,

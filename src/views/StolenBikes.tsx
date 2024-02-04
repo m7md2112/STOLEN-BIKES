@@ -1,9 +1,9 @@
+import Alert from "components/Alert";
+import BikeCard from "components/BikeCard";
+import PaginationBikes, { FetchRef } from "components/PaginationBikes";
+import SearchForm, { SearchCriteria } from "components/SearchForm";
+import useAxios from "hooks/useAxios";
 import { SetStateAction, useEffect, useRef, useState } from "react";
-import Alert from "../components/Alert";
-import BikeCard from "../components/BikeCard";
-import PaginationBikes, { FetchRef } from "../components/PaginationBikes";
-import SearchForm, { SearchCriteria } from "../components/SearchForm";
-import useAxios from "../hooks/useAxios";
 import { AppContainer, CardsContainer } from "./styles/StolenBikes.styled";
 
 interface BikesData {

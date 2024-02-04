@@ -12,7 +12,7 @@ import {
   Span,
 } from "./styles/BikeCard.styled";
 
-import noImage from "../assets/no-image.jpg";
+import noImage from "assets/no-image.jpg";
 
 interface Props {
   imageURL: string;
